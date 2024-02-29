@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Speech Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f3f3;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        p {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        audio {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="container">
+        <h2>Audio_translation</h2>
+        <form action="/translate" method="POST" enctype="multipart/form-data">
+            <label for="file">Upload audio file:</label><br>
+            <input type="file" name="file" id="file" required><br>
+            <label for="target_language">Select the target language:</label><br>
+            <select name="target_language">
+                {% for lang in languages %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="submit" value="Translate">
+
+        </form>
+
+        {% if error %}
+        <p>{{ error }}</p>
+        {% endif %}
+
+        {% if detected_language_1 %}
+        <h2>Detected language:</h2>
+        <p>{{ detected_language_1 }}</p>
+        {% endif %}
+
+        {% if speech_text_1 %}
+        <h2>Speech Text:</h2>
+        <p>{{ speech_text_1 }}</p>
+        {% endif %}
+
+        {% if translated_audio_text %}
+        <h2>Translated Text:</h2>
+        <p>{{ translated_audio_text }}</p>
+        <audio controls>
+            <source src="{{ audio_filename }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        {% endif %}
+    </div>
+
+
+    <div class="container">
+        <h2>Audio_translation_by_microphone</h2>
+        <form action="/translate_microphone" method="POST">
+            <label for="target_language">Select the target language:</label><br>
+            <select name="target_language">
+                {% for lang in languages %}
+                <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="submit" value="Translate">
+        </form>
+    
+        {% if error %}
+        <p>{{ error }}</p>
+        {% endif %}
+    
+        {% if detected_language_2 %}
+        <h2>Detected language:</h2>
+        <p>{{ detected_language_2 }}</p>
+        {% endif %}
+    
+        {% if speech_text_2 %}
+        <h2>Speech Text:</h2>
+        <p>{{ speech_text_2 }}</p>
+        {% endif %}
+    
+        {% if microphone_audio_translated_text %}
+        <h2>Translated Text:</h2>
+        <p>{{microphone_audio_translated_text}}</p>
+        <audio controls>
+            <source src="{{ audio_filename }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        {% endif %}
+    </div>
+    
+    <div class="container">
+        <h2>Image Translator</h2>
+        <form action="/translate_image_upload" method="POST" enctype="multipart/form-data">
+            <label for="target_language">Select the target language:</label><br>
+            <select name="target_language">
+                {% for lang in languages %}
+                    <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="file" name="image_file" accept="image/*"><br>
+            <input type="submit" name="translate" value="Translate">
+        </form>
+
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+
+        {% if image_translated_text %}
+            <h2>Translated Text:</h2>
+            <p>{{ image_translated_text }}</p>
+            
+            <audio controls>
+                <source src="{{ audio_filename_1 }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            
+        {% endif %}
+    </div>
+
+
+    <div class="container">
+        <h2>PDF Translator</h2>
+        <form action="/translate_image_pdf" method="POST" enctype="multipart/form-data">
+            <label for="target_language">Select the target language:</label><br>
+            <select name="target_language">
+                {% for lang in languages %}
+                    <option value="{{ lang }}">{{ lang }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="file" name="pdf_file" accept=".pdf"><br>
+            <input type="submit" value="Translate">
+        </form>
+
+        {% if error %}
+            <p>{{ error }}</p>
+        {% endif %}
+
+        {% if image_embedded_pdf_translated_text %}
+            <h2>Translated Text:</h2>
+            <p>{{ image_embedded_pdf_translated_text }}</p>
+            {% if audio_filename_2 %}
+                <h2>Translated Audio:</h2>
+                <audio controls>
+                    <source src="{{ audio_filename_2 }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+
+</html>
